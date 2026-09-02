@@ -1,123 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Graduation Invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Không dành cho bạn 🔒</title>
 
 <style>
 body{
-    background:#dceeea;
+    margin:0;
+    height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
-    font-family:sans-serif;
+    background:#d8ebe6;
+    font-family:Arial,sans-serif;
 }
 
-.box{
+.container{
     text-align:center;
 }
 
-input{
-    width:220px;
-    height:50px;
-    font-size:28px;
-    text-align:center;
-    border-radius:30px;
-    border:none;
+.lock{
+    font-size:70px;
+    margin-bottom:10px;
+}
+
+.title{
+    font-size:32px;
+    font-weight:bold;
     margin-bottom:20px;
 }
 
+.password{
+    width:220px;
+    height:50px;
+    border:none;
+    border-radius:30px;
+    text-align:center;
+    font-size:30px;
+    background:white;
+    margin-bottom:30px;
+}
+
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(3,80px);
+    gap:12px;
+    justify-content:center;
+}
+
 button{
-    width:70px;
-    height:70px;
-    margin:5px;
+    width:80px;
+    height:80px;
     border:none;
     border-radius:50%;
-    font-size:24px;
+    font-size:28px;
     cursor:pointer;
 }
 
-#error{
+.error{
     color:red;
     margin-top:15px;
+    height:20px;
 }
 </style>
-
 </head>
+
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>Không dành cho bạn</h2>
+<div class="lock">🔒</div>
+
+<div class="title">
+Không dành cho bạn
+</div>
 
 <input
-type="password"
-id="password"
-maxlength="4"
+id="display"
+class="password"
 readonly>
 
-<br>
+<div class="keypad">
+<button onclick="add('1')">1</button>
+<button onclick="add('2')">2</button>
+<button onclick="add('3')">3</button>
 
-<div>
-<button onclick="add(1)">1</button>
-<button onclick="add(2)">2</button>
-<button onclick="add(3)">3</button>
+<button onclick="add('4')">4</button>
+<button onclick="add('5')">5</button>
+<button onclick="add('6')">6</button>
+
+<button onclick="add('7')">7</button>
+<button onclick="add('8')">8</button>
+<button onclick="add('9')">9</button>
+
+<button onclick="clearPass()">⌫</button>
+<button onclick="add('0')">0</button>
+<button onclick="clearAll()">C</button>
 </div>
 
-<div>
-<button onclick="add(4)">4</button>
-<button onclick="add(5)">5</button>
-<button onclick="add(6)">6</button>
-</div>
-
-<div>
-<button onclick="add(7)">7</button>
-<button onclick="add(8)">8</button>
-<button onclick="add(9)">9</button>
-</div>
-
-<div>
-<button onclick="add(0)">0</button>
-</div>
-
-<p id="error"></p>
+<div id="error" class="error"></div>
 
 </div>
 
 <script>
 
-const PASS = "1909";
+const PASSWORD = "1909";
+
+let value = "";
 
 function add(num){
 
-let input =
-document.getElementById("password");
+if(value.length >= 4) return;
 
-input.value += num;
+value += num;
 
-if(input.value.length === 4){
+document.getElementById("display").value =
+"●".repeat(value.length);
 
-if(input.value === PASS){
+if(value.length === 4){
+
+if(value === PASSWORD){
 
 window.location.href =
-"https://canva.link/b1n9yrlcx9colzw";
+"https://canva.link/950mygs44plh57t";
 
 }else{
 
-document.getElementById("error")
-.innerHTML = "Wrong Password";
+document.getElementById("error").innerText =
+"Wrong Password";
 
 setTimeout(()=>{
-input.value="";
-document.getElementById("error")
-.innerHTML="";
-},1000);
+value="";
+document.getElementById("display").value="";
+document.getElementById("error").innerText="";
+},1200);
 
 }
 
 }
 
+}
+
+function clearPass(){
+value = value.slice(0,-1);
+document.getElementById("display").value =
+"●".repeat(value.length);
+}
+
+function clearAll(){
+value="";
+document.getElementById("display").value="";
 }
 
 </script>
