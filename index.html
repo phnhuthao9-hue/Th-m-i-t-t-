@@ -3,103 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Không dành cho bạn 🔒</title>
+
+<title>Mật khẩu tốt nghiệp</title>
 
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: "Segoe UI", sans-serif;
+}
+
 body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#d8ebe6;
-    font-family:Arial,sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:url('image.png') center center/cover no-repeat;
+overflow:hidden;
+position:relative;
+}
+
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(88,45,120,0.35);
+backdrop-filter:blur(4px);
 }
 
 .container{
-    text-align:center;
+position:relative;
+z-index:2;
+width:90%;
+max-width:420px;
+padding:28px;
+border-radius:24px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(16px);
+text-align:center;
+color:white;
+box-shadow:0 8px 32px rgba(0,0,0,.2);
 }
 
 .lock{
-    font-size:70px;
-    margin-bottom:10px;
+font-size:42px;
+margin-bottom:12px;
 }
 
-.title{
-    font-size:32px;
-    font-weight:bold;
-    margin-bottom:20px;
+.poem{
+line-height:1.8;
+font-size:18px;
+margin-bottom:25px;
 }
 
-.password{
-    width:220px;
-    height:50px;
-    border:none;
-    border-radius:30px;
-    text-align:center;
-    font-size:30px;
-    background:white;
-    margin-bottom:30px;
+.hint{
+font-weight:700;
+color:#ffd6ff;
+}
+
+.display{
+display:flex;
+justify-content:center;
+gap:12px;
+margin-bottom:25px;
+}
+
+.dot{
+width:14px;
+height:14px;
+border-radius:50%;
+background:rgba(255,255,255,.35);
+transition:.3s;
+}
+
+.dot.active{
+background:white;
+transform:scale(1.15);
 }
 
 .keypad{
-    display:grid;
-    grid-template-columns:repeat(3,80px);
-    gap:12px;
-    justify-content:center;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
 }
 
-button{
-    width:80px;
-    height:80px;
-    border:none;
-    border-radius:50%;
-    font-size:28px;
-    cursor:pointer;
+.btn{
+border:none;
+height:58px;
+border-radius:16px;
+font-size:22px;
+font-weight:700;
+cursor:pointer;
+background:linear-gradient(
+135deg,
+#d65dff,
+#b347ff
+);
+color:white;
+transition:.2s;
 }
 
-.error{
-    color:red;
-    margin-top:15px;
-    height:20px;
+.btn:hover{
+transform:translateY(-2px);
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+.message{
+margin-top:18px;
+font-size:15px;
+font-weight:600;
+min-height:22px;
+}
+
+.shake{
+animation:shake .4s;
+}
+
+@keyframes shake{
+0%{transform:translateX(0);}
+25%{transform:translateX(-8px);}
+50%{transform:translateX(8px);}
+75%{transform:translateX(-8px);}
+100%{transform:translateX(0);}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="container" id="box">
 
-<div class="lock">🔒</div>
-
-<div class="title">
-Không dành cho bạn
+<div class="lock" id="lock">
+🔒
 </div>
 
-<input
-id="display"
-class="password"
-readonly>
+<div class="poem">
+<span class="hint">Một</span> hành trình dài đã bước qua<br>
+Tri ân <span class="hint">chính</span> bạn và chính ta<br>
+Khoảng cách <span class="hint">không</span> làm mờ kỉ niệm<br>
+Tháng <span class="hint">chín</span> Như Thảo tốt nghiệp nàaaaaaa ✨
+</div>
+
+<div class="display">
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
 
 <div class="keypad">
-<button onclick="add('1')">1</button>
-<button onclick="add('2')">2</button>
-<button onclick="add('3')">3</button>
 
-<button onclick="add('4')">4</button>
-<button onclick="add('5')">5</button>
-<button onclick="add('6')">6</button>
+<button class="btn" onclick="press('1')">1</button>
+<button class="btn" onclick="press('2')">2</button>
+<button class="btn" onclick="press('3')">3</button>
 
-<button onclick="add('7')">7</button>
-<button onclick="add('8')">8</button>
-<button onclick="add('9')">9</button>
+<button class="btn" onclick="press('4')">4</button>
+<button class="btn" onclick="press('5')">5</button>
+<button class="btn" onclick="press('6')">6</button>
 
-<button onclick="clearPass()">⌫</button>
-<button onclick="add('0')">0</button>
-<button onclick="clearAll()">C</button>
+<button class="btn" onclick="press('7')">7</button>
+<button class="btn" onclick="press('8')">8</button>
+<button class="btn" onclick="press('9')">9</button>
+
+<button class="btn" onclick="clearPass()">C</button>
+<button class="btn" onclick="press('0')">0</button>
+<button class="btn" onclick="backspace()">⌫</button>
+
 </div>
 
-<div id="error" class="error"></div>
+<div class="message" id="message"></div>
 
 </div>
 
@@ -107,50 +183,127 @@ readonly>
 
 const PASSWORD = "1909";
 
-let value = "";
+/* ĐỔI LINK CANVA SAU NÀY Ở ĐÂY */
+const CANVA_LINK = "https://canva.link/950mygs44plh57t";
 
-function add(num){
+let input = "";
 
-if(value.length >= 4) return;
+const dots = document.querySelectorAll(".dot");
+const msg = document.getElementById("message");
+const box = document.getElementById("box");
+const lock = document.getElementById("lock");
 
-value += num;
+function beep(freq,duration){
 
-document.getElementById("display").value =
-"●".repeat(value.length);
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-if(value.length === 4){
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
 
-if(value === PASSWORD){
+osc.frequency.value = freq;
+osc.type = "sine";
 
-window.location.href =
-"https://canva.link/950mygs44plh57t";
+osc.connect(gain);
+gain.connect(ctx.destination);
 
-}else{
+gain.gain.value = 0.05;
 
-document.getElementById("error").innerText =
-"Wrong Password";
+osc.start();
 
 setTimeout(()=>{
-value="";
-document.getElementById("display").value="";
-document.getElementById("error").innerText="";
-},1200);
+osc.stop();
+ctx.close();
+},duration);
 
 }
+
+function updateDots(){
+
+dots.forEach((dot,index)=>{
+
+dot.classList.toggle(
+"active",
+index < input.length
+);
+
+});
+
+}
+
+function press(num){
+
+if(input.length >= 4) return;
+
+beep(600,80);
+
+input += num;
+
+updateDots();
+
+if(input.length === 4){
+
+setTimeout(checkPassword,200);
 
 }
 
 }
 
 function clearPass(){
-value = value.slice(0,-1);
-document.getElementById("display").value =
-"●".repeat(value.length);
+
+input = "";
+
+updateDots();
+
+msg.textContent = "";
+
 }
 
-function clearAll(){
-value="";
-document.getElementById("display").value="";
+function backspace(){
+
+input = input.slice(0,-1);
+
+updateDots();
+
+}
+
+function checkPassword(){
+
+if(input === PASSWORD){
+
+beep(900,200);
+
+lock.textContent = "🔓";
+
+msg.textContent =
+"dễ vậy mà không đoán được nữa là chịu luôn =)))";
+
+setTimeout(()=>{
+
+window.location.href = CANVA_LINK;
+
+},1500);
+
+}else{
+
+beep(200,250);
+
+box.classList.add("shake");
+
+msg.textContent =
+"ủa bộ khó hiểu lắm hả ta 🤨";
+
+setTimeout(()=>{
+box.classList.remove("shake");
+},400);
+
+setTimeout(()=>{
+input = "";
+updateDots();
+msg.textContent = "";
+},1200);
+
+}
+
 }
 
 </script>
