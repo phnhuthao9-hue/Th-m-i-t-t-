@@ -2,14 +2,125 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Thiệp tốt nghiệp</title>
+<title>Graduation Invitation</title>
+
+<style>
+body{
+    background:#dceeea;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:sans-serif;
+}
+
+.box{
+    text-align:center;
+}
+
+input{
+    width:220px;
+    height:50px;
+    font-size:28px;
+    text-align:center;
+    border-radius:30px;
+    border:none;
+    margin-bottom:20px;
+}
+
+button{
+    width:70px;
+    height:70px;
+    margin:5px;
+    border:none;
+    border-radius:50%;
+    font-size:24px;
+    cursor:pointer;
+}
+
+#error{
+    color:red;
+    margin-top:15px;
+}
+</style>
+
 </head>
+<body>
 
-<body style="text-align:center;margin-top:100px;">
+<div class="box">
 
-<h1>Xin chào!</h1>
+<h2>Không dành cho bạn</h2>
 
-<p>Website đã hoạt động 🎓</p>
+<input
+type="password"
+id="password"
+maxlength="4"
+readonly>
+
+<br>
+
+<div>
+<button onclick="add(1)">1</button>
+<button onclick="add(2)">2</button>
+<button onclick="add(3)">3</button>
+</div>
+
+<div>
+<button onclick="add(4)">4</button>
+<button onclick="add(5)">5</button>
+<button onclick="add(6)">6</button>
+</div>
+
+<div>
+<button onclick="add(7)">7</button>
+<button onclick="add(8)">8</button>
+<button onclick="add(9)">9</button>
+</div>
+
+<div>
+<button onclick="add(0)">0</button>
+</div>
+
+<p id="error"></p>
+
+</div>
+
+<script>
+
+const PASS = "1909";
+
+function add(num){
+
+let input =
+document.getElementById("password");
+
+input.value += num;
+
+if(input.value.length === 4){
+
+if(input.value === PASS){
+
+window.location.href =
+"https://canva.link/b1n9yrlcx9colzw";
+
+}else{
+
+document.getElementById("error")
+.innerHTML = "Wrong Password";
+
+setTimeout(()=>{
+input.value="";
+document.getElementById("error")
+.innerHTML="";
+},1000);
+
+}
+
+}
+
+}
+
+</script>
 
 </body>
 </html>
