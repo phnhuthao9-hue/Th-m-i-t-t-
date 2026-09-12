@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Không dành cho bạn 🤨</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+position:relative;
+background:url('image.png') center center/cover no-repeat;
+}
+
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(88,45,120,.12);
+backdrop-filter:blur(1px);
+}
+
+.container{
+position:relative;
+z-index:2;
+width:90%;
+max-width:420px;
+padding:24px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(16px);
+border-radius:24px;
+text-align:center;
+color:white;
+box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+
+.lock{
+font-size:28px;
+margin-bottom:10px;
+}
+
+.poem{
+font-size:14px;
+line-height:1.7;
+margin-bottom:22px;
+}
+
+.hint{
+font-weight:700;
+color:#ffd8ff;
+}
+
+.display{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-bottom:22px;
+}
+
+.dot{
+width:14px;
+height:14px;
+border-radius:50%;
+background:rgba(255,255,255,.35);
+transition:.3s;
+}
+
+.dot.active{
+background:white;
+transform:scale(1.15);
+}
+
+.keypad{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+}
+
+.btn{
+border:none;
+height:58px;
+font-size:22px;
+font-weight:700;
+cursor:pointer;
+color:white;
+
+background:linear-gradient(
+135deg,
+#e4a7ff,
+#b85cff
+);
+
+border-radius:14px;
+transition:.2s;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(25,25,35,.92);
+backdrop-filter:blur(10px);
+padding:18px 22px;
+border-radius:18px;
+color:white;
+font-size:15px;
+font-weight:600;
+text-align:center;
+opacity:0;
+pointer-events:none;
+transition:.3s;
+z-index:9999;
+max-width:280px;
+}
+
+.popup.show{
+opacity:1;
+}
+
+.shake{
+animation:shake .4s;
+}
+
+@keyframes shake{
+0%{transform:translateX(0);}
+25%{transform:translateX(-8px);}
+50%{transform:translateX(8px);}
+75%{transform:translateX(-8px);}
+100%{transform:translateX(0);}
+}
+
+.sparkle{
+position:absolute;
+width:6px;
+height:6px;
+border-radius:50%;
+background:white;
+opacity:.6;
+animation:fly linear infinite;
+}
+
+@keyframes fly{
+
+0%{
+transform:translateY(100vh);
+opacity:0;
+}
+
+10%{
+opacity:.8;
+}
+
+90%{
+opacity:.8;
+}
+
+100%{
+transform:translateY(-120vh);
+opacity:0;
+}
+
+}
+
+@media(max-width:480px){
+
+.container{
+padding:20px;
+}
+
+.poem{
+font-size:13px;
+}
+
+.btn{
+height:52px;
+font-size:20px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="box">
+
+<div class="lock" id="lock">
+🔒
+</div>
+
+<div class="poem">
+<span class="hint">Một</span> hành trình dài đã bước qua<br>
+Tri ân <span class="hint">chính</span> bạn và chính ta<br>
+Khoảng cách <span class="hint">không</span> làm mờ kỉ niệm<br>
+Tháng <span class="hint">chín</span> Như Thảo tốt nghiệp nàaaaaaa ✨
+</div>
+
+<div class="display">
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
+
+<div class="keypad">
+
+<button class="btn" onclick="press('1')">1</button>
+<button class="btn" onclick="press('2')">2</button>
+<button class="btn" onclick="press('3')">3</button>
+
+<button class="btn" onclick="press('4')">4</button>
+<button class="btn" onclick="press('5')">5</button>
+<button class="btn" onclick="press('6')">6</button>
+
+<button class="btn" onclick="press('7')">7</button>
+<button class="btn" onclick="press('8')">8</button>
+<button class="btn" onclick="press('9')">9</button>
+
+<button class="btn" onclick="clearPass()">C</button>
+<button class="btn" onclick="press('0')">0</button>
+<button class="btn" onclick="backspace()">⌫</button>
+
+</div>
+
+</div>
+
+<div class="popup" id="popup"></div>
+
+<script>
+
+const PASSWORD = "1909";
+
+/* ĐỔI LINK CANVA TẠI ĐÂY */
+const CANVA_LINK = "https://www.canva.com/design/DAHU_n_ihUQ/Hw58GTgThaHoQbvvB7ttbw/edit";
+
+let input = "";
+
+const dots = document.querySelectorAll(".dot");
+const popup = document.getElementById("popup");
+const box = document.getElementById("box");
+const lock = document.getElementById("lock");
+
+function showPopup(text){
+
+popup.textContent = text;
+popup.classList.add("show");
+
+setTimeout(()=>{
+popup.classList.remove("show");
+},1500);
+
+}
+
+function beep(freq,duration){
+
+const ctx =
+new(window.AudioContext||window.webkitAudioContext)();
+
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+
+osc.frequency.value = freq;
+osc.type = "sine";
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+gain.gain.value = 0.05;
+
+osc.start();
+
+setTimeout(()=>{
+osc.stop();
+ctx.close();
+},duration);
+
+}
+
+function updateDots(){
+
+dots.forEach((dot,index)=>{
+
+dot.classList.toggle(
+"active",
+index < input.length
+);
+
+});
+
+}
+
+function press(num){
+
+if(input.length >= 4) return;
+
+beep(600,80);
+
+input += num;
+
+updateDots();
+
+if(input.length === 4){
+
+setTimeout(checkPassword,200);
+
+}
+
+}
+
+function clearPass(){
+
+input = "";
+updateDots();
+
+}
+
+function backspace(){
+
+input = input.slice(0,-1);
+updateDots();
+
+}
+
+function checkPassword(){
+
+if(input === PASSWORD){
+
+beep(950,250);
+
+lock.textContent = "🔓";
+
+showPopup(
+"dễ vậy mà không đoán được nữa là chịu luôn =)))"
+);
+
+setTimeout(()=>{
+window.location.href = CANVA_LINK;
+},1500);
+
+}else{
+
+beep(220,250);
+
+box.classList.add("shake");
+
+showPopup(
+"ủa bộ khó hiểu lắm hả ta 🤨"
+);
+
+setTimeout(()=>{
+box.classList.remove("shake");
+},400);
+
+setTimeout(()=>{
+input="";
+updateDots();
+},1200);
+
+}
+
+}
+
+/* ĐOM ĐÓM */
+
+for(let i=0;i<20;i++){
+
+const s =
+document.createElement("div");
+
+s.className = "sparkle";
+
+s.style.left =
+Math.random()*100 + "%";
+
+s.style.animationDuration =
+(8 + Math.random()*10) + "s";
+
+s.style.animationDelay =
+Math.random()*10 + "s";
+
+document.body.appendChild(s);
+
+}
+
+</script>
+
+</body>
+</html>
